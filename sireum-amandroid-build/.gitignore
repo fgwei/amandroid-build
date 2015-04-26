@@ -1,0 +1,14 @@
+.DS_Store
+/bin
+/target
+/temp
+/update
+/codebase
+/sbt
+/codebase
+/.cache
+/.scala_dependencies
+/sireum-*
+/bakar
+/core
+/project-dependency.dot
