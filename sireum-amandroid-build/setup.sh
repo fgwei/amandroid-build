@@ -11,3 +11,12 @@ for i in "${ips[@]}"; do
     git clone https://github.com/sireum/${i}.git codebase/${i}
   fi
 done
+if [ -e codebase/amandroid-build ] ; then
+  echo "Pulling amandroid-build"
+  cd codebase/amandroid-build
+  git pull
+  cd ../..
+else
+  echo "Cloning amandroid-build"
+  git clone https://github.com/fgwei/amandroid-build.git codebase/amandroid-build
+fi

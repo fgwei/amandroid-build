@@ -36,6 +36,7 @@ object AmandroidBuild extends Build {
   final val PARSER_DIR = "codebase/parser/"
   final val JAWA_DIR = "codebase/jawa/"
   final val AMANDROID_DIR = "codebase/amandroid/"
+  final val AMANDROID_BUILD_DIR = "codebase/amandroid-build/"
 
   val APPS_STASH_PATH =
     if (System.getenv("APPS_PATH") != null)
@@ -63,7 +64,7 @@ object AmandroidBuild extends Build {
             -- inProjects(amandroidProject)
             -- inProjects(amandroidTest)
             -- inProjects(jawaTest)
-          ),
+          ) ++ Seq(cliGenTask),
       base = file(".")) aggregate (
         lib, macr, util, parser,
         pilar, alir,
@@ -162,7 +163,7 @@ object AmandroidBuild extends Build {
     libPI, utilPI, pilarPI)
   val optionPI = new ProjectInfo("Sireum Option", CORE_DIR, Seq(),
     macroPI, utilPI)
-  val amandroidProjectPI = new ProjectInfo("Sireum Amandroid Project", AMANDROID_DIR, Seq(),
+  val amandroidProjectPI = new ProjectInfo("Sireum Amandroid Project", AMANDROID_BUILD_DIR, Seq(),
     libPI)
   val jawaPI = new ProjectInfo("Sireum Jawa",
     JAWA_DIR, Seq(),
@@ -189,4 +190,8 @@ object AmandroidBuild extends Build {
     AMANDROID_DIR, Seq("Amandroid"),
     libPI, utilPI, pilarPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidPI,
     amandroidAlirPI, amandroidSecurityPI, jawaTestPI)
+  
+  val cliGen = InputKey[Unit]("cligen", "Generate CLI.")
+  val cliGenTask =
+    cliGen <<= inputTask(_ map (ProjectHelper.cliGen(_, projectInfos)))
 }
