@@ -68,7 +68,7 @@ object AmandroidBuild extends Build {
       base = file(".")) aggregate (
         lib, macr, util, parser,
         pilar, alir,
-        option, amandroidProject,
+        option, pipeline, cli, amandroidProject,
         jawa, jawaAlir, jawaTest,
         amandroid, amandroidAlir, amandroidSecurity, amandroidCli, amandroidTest
         ) settings (
@@ -110,6 +110,8 @@ object AmandroidBuild extends Build {
   lazy val pilar = toSbtProject(pilarPI)
   lazy val alir = toSbtProject(alirPI)
   lazy val option = toSbtProject(optionPI)
+  lazy val pipeline = toSbtProject(pipelinePI)
+  lazy val cli = toSbtProject(cliPI)
   lazy val amandroidProject = toSbtProject(amandroidProjectPI, amandroidSettings)
   lazy val jawa = toSbtProject(jawaPI)
   lazy val jawaAlir = toSbtProject(jawaAlirPI)
@@ -163,6 +165,10 @@ object AmandroidBuild extends Build {
     libPI, utilPI, pilarPI)
   val optionPI = new ProjectInfo("Sireum Option", CORE_DIR, Seq(),
     macroPI, utilPI)
+  val pipelinePI = new ProjectInfo("Sireum Pipeline", CORE_DIR, Seq(),
+    libPI, utilPI)
+  val cliPI = new ProjectInfo("Sireum CLI", CORE_DIR, Seq(),
+    utilPI, optionPI, pipelinePI)
   val amandroidProjectPI = new ProjectInfo("Sireum Amandroid Project", AMANDROID_BUILD_DIR, Seq(),
     libPI)
   val jawaPI = new ProjectInfo("Sireum Jawa",
