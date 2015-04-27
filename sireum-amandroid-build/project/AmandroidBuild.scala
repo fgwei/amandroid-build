@@ -64,11 +64,11 @@ object AmandroidBuild extends Build {
             -- inProjects(amandroidProject)
             -- inProjects(amandroidTest)
             -- inProjects(jawaTest)
-          ) ++ Seq(cliGenTask),
+          ),
       base = file(".")) aggregate (
         lib, macr, util, parser,
         pilar, alir,
-        option, pipeline, cli, amandroidProject,
+        option, amandroidProject,
         jawa, jawaAlir, jawaTest,
         amandroid, amandroidAlir, amandroidSecurity, amandroidCli, amandroidTest
         ) settings (
@@ -110,8 +110,6 @@ object AmandroidBuild extends Build {
   lazy val pilar = toSbtProject(pilarPI)
   lazy val alir = toSbtProject(alirPI)
   lazy val option = toSbtProject(optionPI)
-  lazy val pipeline = toSbtProject(pipelinePI)
-  lazy val cli = toSbtProject(cliPI)
   lazy val amandroidProject = toSbtProject(amandroidProjectPI, amandroidSettings)
   lazy val jawa = toSbtProject(jawaPI)
   lazy val jawaAlir = toSbtProject(jawaAlirPI)
@@ -165,10 +163,6 @@ object AmandroidBuild extends Build {
     libPI, utilPI, pilarPI)
   val optionPI = new ProjectInfo("Sireum Option", CORE_DIR, Seq(),
     macroPI, utilPI)
-  val pipelinePI = new ProjectInfo("Sireum Pipeline", CORE_DIR, Seq(),
-    libPI, utilPI)
-  val cliPI = new ProjectInfo("Sireum CLI", CORE_DIR, Seq(),
-    utilPI, optionPI, pipelinePI)
   val amandroidProjectPI = new ProjectInfo("Sireum Amandroid Project", AMANDROID_BUILD_DIR, Seq(),
     libPI)
   val jawaPI = new ProjectInfo("Sireum Jawa",
@@ -197,7 +191,7 @@ object AmandroidBuild extends Build {
     libPI, utilPI, pilarPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidPI,
     amandroidAlirPI, amandroidSecurityPI, jawaTestPI)
   
-  val cliGen = InputKey[Unit]("cligen", "Generate CLI.")
-  val cliGenTask =
-    cliGen <<= inputTask(_ map (ProjectHelper.cliGen(_, projectInfos)))
+//  val cliGen = InputKey[Unit]("cligen", "Generate CLI.")
+//  val cliGenTask =
+//    cliGen <<= inputTask(_ map (ProjectHelper.cliGen(_, projectInfos)))
 }
