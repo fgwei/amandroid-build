@@ -4,12 +4,12 @@
 
 Requirement: Java 8 or above
 
-1. Run:
+1.Run: 
 ```bash
-setup.sh
+./setup.sh
 ```
 
-2. Run sbt:
+2.Run sbt:
 ```bash
 tools/bin/sbt
 ```
