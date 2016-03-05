@@ -1,6 +1,6 @@
 # amandroid-build
 
-##How To Build Amandroid using the Simple Build Tool (SBT)
+## Build Amandroid using the Simple Build Tool (SBT)
 
 Requirement: Java 8 or above
 
@@ -12,5 +12,4 @@ Requirement: Java 8 or above
 
 See http://www.scala-sbt.org/release/docs/index.html for more documentation on SBT.
 
-To resolve sireum-amandroid-build Eclipse project dependency, run tools/bin/sbt-init instead
-of tools/bin/sbt-init
+To resolve sireum-amandroid-build Eclipse project dependency, run tools/bin/sbt-init
