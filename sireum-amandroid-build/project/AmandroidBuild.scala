@@ -7,24 +7,16 @@ http://www.eclipse.org/legal/epl-v10.html
 */
 import sbt._
 import Keys._
+import sbt.complete.Parsers._
 import scala.collection.mutable._
-import java.net.URLClassLoader
-import java.io.BufferedInputStream
-import java.io.BufferedOutputStream
-import java.io.BufferedReader
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.FileReader
-import java.io.FileWriter
-import java.io.OutputStreamWriter
-import java.io.PrintWriter
-import java.security._
-import java.util.Properties
-import java.util.StringTokenizer
-import java.io.StringWriter
 import eu.henkelmann.sbt.JUnitXmlTestsListener
+import org.scalajs.sbtplugin.ScalaJSPlugin
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import sbtunidoc.Plugin._
 import UnidocKeys._
+import com.github.retronym.SbtOneJar
+import com.typesafe.sbt.SbtAspectj._
+
 
 /**
  * @author <a href="mailto:fgwei@k-state.edu">Fengguo Wei</a>
@@ -38,16 +30,8 @@ object AmandroidBuild extends Build {
   final val AMANDROID_DIR = "codebase/amandroid/"
   final val AMANDROID_BUILD_DIR = "codebase/amandroid-build/"
 
-  val APPS_STASH_PATH =
-    if (System.getenv("APPS_PATH") != null)
-      System.getenv("APPS_PATH")
-    else
-      firstExists("Temp/apps.amandroid.sireum.org",
-        "/research/santos/stash/apps.amandroid.sireum.org",
-        "/Volumes/santos/stash/apps.amandroid.sireum.org")
-
   import ProjectInfo._
-
+  
   lazy val sireum_amandroid =
     Project(
       id = "sireum_amandroid",
@@ -70,12 +54,12 @@ object AmandroidBuild extends Build {
         pilar, alir,
         option, amandroidProject,
         jawa, jawaAlir, jawaTest,
-        amandroid, amandroidAlir, amandroidSecurity, amandroidCli, amandroidTest
+        amandroid, amandroidAlir, amandroidSecurity, amandroidSerialization, amandroidConcurrent, amandroidCli, amandroidTest
         ) settings (
           name := "Sireum Amandroid")
 
-  final val scalaVer = "2.11.6"
-
+  final val scalaVer = "2.11.7"
+  
   val sireumSettings = Defaults.defaultSettings ++ Seq(
     organization := "SAnToS Laboratory",
     artifactName := { (config : ScalaVersion, module : ModuleID, artifact : Artifact) =>
@@ -96,12 +80,30 @@ object AmandroidBuild extends Build {
     testListeners <<= (target, streams).map((t, s) => Seq(new JUnitXmlTestsListener(t.getAbsolutePath)))
   )
   
+  final val kamonVersion = "0.3.4"
+  
   val amandroidSettings = sireumSettings ++ Seq(
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
     scalacOptions in (Compile, doc) ++= Opts.doc.title("Sireum-Amandroid-Api-Doc"),
     scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/root-doc.txt"),
-    autoAPIMappings := true
+    autoAPIMappings := true,
+    libraryDependencies ++= Seq(
+      "com.typesafe.akka" %% "akka-actor" % "2.3.5",
+      "com.typesafe.akka" %% "akka-cluster" % "2.3.5",
+      "io.kamon" %% "kamon-core" % kamonVersion,
+      "io.kamon" %% "kamon-statsd" % kamonVersion,
+      "io.kamon" %% "kamon-log-reporter" % kamonVersion,
+      "io.kamon" %% "kamon-system-metrics" % kamonVersion,
+      "org.aspectj" % "aspectjweaver" % "1.8.1"
+    )
   )
+  
+  aspectjSettings
+ 
+  javaOptions <++= AspectjKeys.weaverOptions in Aspectj
+   
+  // when you call "sbt run" aspectj weaving kicks in
+  fork in run := true
 
   lazy val lib = toSbtProject(libPI)
   lazy val macr = toSbtProject(macroPI)
@@ -117,6 +119,8 @@ object AmandroidBuild extends Build {
   lazy val amandroid = toSbtProject(amandroidPI, amandroidSettings)
   lazy val amandroidAlir = toSbtProject(amandroidAlirPI, amandroidSettings)
   lazy val amandroidSecurity = toSbtProject(amandroidSecurityPI, amandroidSettings)
+  lazy val amandroidSerialization = toSbtProject(amandroidSerializationPI, amandroidSettings)
+  lazy val amandroidConcurrent = toSbtProject(amandroidConcurrentPI, amandroidSettings)
   lazy val amandroidCli = toSbtProject(amandroidCliPI, amandroidSettings)
   lazy val amandroidTest = toSbtProject(amandroidTestPI, amandroidSettings)
 
@@ -183,6 +187,12 @@ object AmandroidBuild extends Build {
   val amandroidSecurityPI = new ProjectInfo("Sireum Amandroid Security",
     AMANDROID_DIR, Seq("Amandroid"),
     libPI, utilPI, pilarPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidPI, amandroidAlirPI)
+  val amandroidSerializationPI = new ProjectInfo("Sireum Amandroid Serialization",
+    AMANDROID_DIR, Seq("Amandroid"),
+    libPI, utilPI, pilarPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidPI, amandroidAlirPI, amandroidSecurityPI)
+  val amandroidConcurrentPI = new ProjectInfo("Sireum Amandroid Concurrent",
+    AMANDROID_DIR, Seq("Amandroid"),
+    libPI, utilPI, pilarPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidPI, amandroidAlirPI, amandroidSecurityPI, amandroidSerializationPI)
   val amandroidCliPI = new ProjectInfo("Sireum Amandroid Cli",
     AMANDROID_DIR, Seq("Amandroid"),
     libPI, utilPI, pilarPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidPI, amandroidAlirPI, amandroidSecurityPI)
@@ -191,7 +201,4 @@ object AmandroidBuild extends Build {
     libPI, utilPI, pilarPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidPI,
     amandroidAlirPI, amandroidSecurityPI, jawaTestPI)
   
-//  val cliGen = InputKey[Unit]("cligen", "Generate CLI.")
-//  val cliGenTask =
-//    cliGen <<= inputTask(_ map (ProjectHelper.cliGen(_, projectInfos)))
 }

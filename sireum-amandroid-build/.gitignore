@@ -7,6 +7,7 @@
 /sbt
 /codebase
 /.cache
+/.cache_main
 /.scala_dependencies
 /sireum-*
 /bakar
