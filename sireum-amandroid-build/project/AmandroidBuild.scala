@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 - 2016 Fengguo Wei and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Detailed contributors are listed in the CONTRIBUTOR.md
+ ******************************************************************************/
 /*
 Copyright (c) 2013-2014 Fengguo Wei & Sankardas Roy, Kansas State University.        
 All rights reserved. This program and the accompanying materials      
@@ -116,6 +125,7 @@ object AmandroidBuild extends Build {
   lazy val jawa = toSbtProject(jawaPI)
   lazy val jawaAlir = toSbtProject(jawaAlirPI)
   lazy val jawaTest = toSbtProject(jawaTestPI)
+  lazy val amandroidDedex = toSbtProject(amandroidDedexPI, amandroidSettings)
   lazy val amandroid = toSbtProject(amandroidPI, amandroidSettings)
   lazy val amandroidAlir = toSbtProject(amandroidAlirPI, amandroidSettings)
   lazy val amandroidSecurity = toSbtProject(amandroidSecurityPI, amandroidSettings)
@@ -178,15 +188,18 @@ object AmandroidBuild extends Build {
   val jawaTestPI = new ProjectInfo("Sireum Jawa Test",
     JAWA_DIR, Seq(),
     libPI, utilPI, pilarPI, alirPI, jawaPI, jawaAlirPI)
+  val amandroidDedexPI = new ProjectInfo("Sireum Amandroid Dedex",
+    AMANDROID_DIR, Seq("Amandroid"),
+    libPI, utilPI, jawaPI)
   val amandroidPI = new ProjectInfo("Sireum Amandroid",
     AMANDROID_DIR, Seq("Amandroid"),
-    libPI, utilPI, pilarPI, alirPI, optionPI, jawaPI, jawaAlirPI)
+    libPI, utilPI, pilarPI, parserPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidDedexPI)
   val amandroidAlirPI = new ProjectInfo("Sireum Amandroid Alir",
     AMANDROID_DIR, Seq("Amandroid"),
-    libPI, utilPI, pilarPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidPI)
+    libPI, utilPI, pilarPI, parserPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidDedexPI, amandroidPI)
   val amandroidSecurityPI = new ProjectInfo("Sireum Amandroid Security",
     AMANDROID_DIR, Seq("Amandroid"),
-    libPI, utilPI, pilarPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidPI, amandroidAlirPI)
+    libPI, utilPI, pilarPI, parserPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidDedexPI, amandroidPI, amandroidAlirPI)
   val amandroidSerializationPI = new ProjectInfo("Sireum Amandroid Serialization",
     AMANDROID_DIR, Seq("Amandroid"),
     libPI, utilPI, pilarPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidPI, amandroidAlirPI, amandroidSecurityPI)
@@ -195,10 +208,9 @@ object AmandroidBuild extends Build {
     libPI, utilPI, pilarPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidPI, amandroidAlirPI, amandroidSecurityPI, amandroidSerializationPI)
   val amandroidCliPI = new ProjectInfo("Sireum Amandroid Cli",
     AMANDROID_DIR, Seq("Amandroid"),
-    libPI, utilPI, pilarPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidPI, amandroidAlirPI, amandroidSecurityPI)
+    libPI, utilPI, pilarPI, parserPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidDedexPI, amandroidPI, amandroidAlirPI, amandroidSecurityPI, amandroidSerializationPI, amandroidConcurrentPI)
   val amandroidTestPI = new ProjectInfo("Sireum Amandroid Test",
     AMANDROID_DIR, Seq("Amandroid"),
-    libPI, utilPI, pilarPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidPI,
-    amandroidAlirPI, amandroidSecurityPI, jawaTestPI)
-  
+    libPI, utilPI, pilarPI, parserPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidDedexPI, amandroidPI,
+    amandroidAlirPI, amandroidSecurityPI, amandroidSerializationPI, amandroidConcurrentPI, jawaTestPI)
 }
