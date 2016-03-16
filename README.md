@@ -2,7 +2,7 @@ amandroid-build
 =================
 Build Amandroid using the Simple Build Tool (SBT)
 
-# Setup
+## Setup
 
 Requirement: Java 8 or above
 
@@ -19,7 +19,7 @@ See http://www.scala-sbt.org/release/docs/index.html for more documentation on S
 
 Hints: If you want to build Amandroid with your forked reporitory, you should modify `setup.sh` to have your reporitory's URL.
 
-# Build Amandroid
+## Build Amandroid
 
 Execute following command to build Amandroid:
 ```bash
@@ -28,9 +28,9 @@ tools/bin/sbt clean compile package-bin "build-amandroid /path/of/Amandroid"
 
 Hints: `/path/of/Amandroid` is the place you want to have Amandroid generated.
 
-# Run Amandroid
+## Run Amandroid
 
-## For MacOS and Linux user
+### For MacOS and Linux user
 
 Requirement: wget, tar and unzip.
 
@@ -50,7 +50,7 @@ Examples commands, which will invoke object `org.sireum.amandroid.cli.TaintAnaly
 amandroid org.sireum.amandroid.cli.TaintAnalysis DATA_LEAKAGE false /amandroid/sources/icc-bench /output/icc-bench
 ```
 
-## For Windows user
+### For Windows user
 
 Requirement: wget, unzip (Those two software can be downloaded from http://gnuwin32.sourceforge.net)
 
