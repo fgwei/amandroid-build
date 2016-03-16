@@ -5,7 +5,7 @@ Requirement: Java 8 or above
 
 1. Run setup.sh
 
-3. Run sbt:
+2. Run sbt:
 
    tools/bin/sbt
 

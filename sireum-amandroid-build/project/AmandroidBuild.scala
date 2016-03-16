@@ -41,10 +41,16 @@ object AmandroidBuild extends Build {
 
   import ProjectInfo._
   
-  lazy val sireum_amandroid =
+  val buildAmandroid = InputKey[Unit]("build-amandroid", "Build Amandroid.")
+  
+  lazy val amandroid_project =
     Project(
-      id = "sireum_amandroid",
-      settings = amandroidSettings ++ unidocSettings ++ Seq(
+      id = "amandroid",
+      settings = amandroidSettings ++ Seq(
+          buildAmandroid := {
+            val args = spaceDelimited("<arg>").parsed
+            BuildHelper.buildAmandroid(baseDirectory.value, projectInfoMap, args)
+          }) ++ unidocSettings ++ Seq(
           unidocProjectFilter in (ScalaUnidoc, unidoc) := 
             inAnyProject 
             -- inProjects(lib)
@@ -57,20 +63,20 @@ object AmandroidBuild extends Build {
             -- inProjects(amandroidProject)
             -- inProjects(amandroidTest)
             -- inProjects(jawaTest)
-          ),
+          ) ++ SbtOneJar.oneJarSettings,
       base = file(".")) aggregate (
         lib, macr, util, parser,
         pilar, alir,
         option, amandroidProject,
-        jawa, jawaAlir, jawaTest,
-        amandroid, amandroidAlir, amandroidSecurity, amandroidSerialization, amandroidConcurrent, amandroidCli, amandroidTest
+        jawa, jawaCompiler, jawaAlir, jawaTest,
+        amandroidDedex, amandroid, amandroidAlir, amandroidSecurity, amandroidSerialization, amandroidConcurrent, amandroidCli, amandroidTest, amandroidRun
         ) settings (
-          name := "Sireum Amandroid")
+          name := "Amandroid")
 
   final val scalaVer = "2.11.7"
   
   val sireumSettings = Defaults.defaultSettings ++ Seq(
-    organization := "SAnToS Laboratory",
+    organization := "Argus Laboratory",
     artifactName := { (config : ScalaVersion, module : ModuleID, artifact : Artifact) =>
       artifact.name + (
         artifact.classifier match {
@@ -123,6 +129,7 @@ object AmandroidBuild extends Build {
   lazy val option = toSbtProject(optionPI)
   lazy val amandroidProject = toSbtProject(amandroidProjectPI, amandroidSettings)
   lazy val jawa = toSbtProject(jawaPI)
+  lazy val jawaCompiler = toSbtProject(jawaCompilerPI)
   lazy val jawaAlir = toSbtProject(jawaAlirPI)
   lazy val jawaTest = toSbtProject(jawaTestPI)
   lazy val amandroidDedex = toSbtProject(amandroidDedexPI, amandroidSettings)
@@ -133,6 +140,7 @@ object AmandroidBuild extends Build {
   lazy val amandroidConcurrent = toSbtProject(amandroidConcurrentPI, amandroidSettings)
   lazy val amandroidCli = toSbtProject(amandroidCliPI, amandroidSettings)
   lazy val amandroidTest = toSbtProject(amandroidTestPI, amandroidSettings)
+  lazy val amandroidRun = toSbtProject(amandroidRunPI, amandroidSettings)
 
   def firstExists(default : String, paths : String*) : String = {
     for (p <- paths)
@@ -182,6 +190,9 @@ object AmandroidBuild extends Build {
   val jawaPI = new ProjectInfo("Sireum Jawa",
     JAWA_DIR, Seq(),
     libPI, utilPI, pilarPI)
+  val jawaCompilerPI = new ProjectInfo("Sireum Jawa Compiler",
+    JAWA_DIR, Seq(),
+    libPI, utilPI, pilarPI, parserPI, alirPI, jawaPI)
   val jawaAlirPI = new ProjectInfo("Sireum Jawa Alir",
     JAWA_DIR, Seq(),
     libPI, utilPI, pilarPI, alirPI, jawaPI)
@@ -213,4 +224,29 @@ object AmandroidBuild extends Build {
     AMANDROID_DIR, Seq("Amandroid"),
     libPI, utilPI, pilarPI, parserPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidDedexPI, amandroidPI,
     amandroidAlirPI, amandroidSecurityPI, amandroidSerializationPI, amandroidConcurrentPI, jawaTestPI)
+  val amandroidRunPI = new ProjectInfo("Sireum Amandroid Run",
+    AMANDROID_DIR, Seq("Amandroid"),
+    libPI, utilPI, pilarPI, parserPI, alirPI, optionPI, jawaPI, jawaAlirPI, amandroidDedexPI, amandroidPI,
+    amandroidAlirPI, amandroidSecurityPI, amandroidSerializationPI, amandroidConcurrentPI)
+  lazy val projectInfoMap : Map[String, ProjectInfo] = Map(
+    Seq(
+      libPI,
+      macroPI,
+      utilPI,
+      pilarPI,
+      parserPI,
+      alirPI,
+      optionPI,
+      jawaPI,
+      jawaCompilerPI,
+      jawaAlirPI,
+      amandroidDedexPI,
+      amandroidPI,
+      amandroidAlirPI,
+      amandroidSecurityPI,
+      amandroidSerializationPI,
+      amandroidConcurrentPI,
+      amandroidCliPI,
+      amandroidRunPI
+    ).map { pi => pi.id -> pi } : _*)
 }
