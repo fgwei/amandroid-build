@@ -35,6 +35,7 @@ Hints: `/path/of/Amandroid` is the place you want to have Amandroid generated.
 Requirement: wget, tar and unzip.
 
 a. Go to `/path/of/Amandroid`, or set `/path/of/Amandroid` in your PATH.
+
 b. [Optional] If you want to set the Java heap size (most of the time you do need).
 ```bash
 export JAVA_OPTS=-Xms512m-Xmx8g
