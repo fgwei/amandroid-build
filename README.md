@@ -6,11 +6,11 @@ Build Amandroid using the Simple Build Tool (SBT)
 
 Requirement: Java 8 or above
 
-1. Execute following command to prepare the codebase: 
+a. Execute following command to prepare the codebase: 
 ```bash
 setup.sh
 ```
-2. To resolve sireum-amandroid-build Eclipse project dependency, run:
+b. To resolve sireum-amandroid-build Eclipse project dependency, run:
 ```bash
 tools/bin/sbt-init
 ```
@@ -34,12 +34,12 @@ Hints: `/path/of/Amandroid` is the place you want to have Amandroid generated.
 
 Requirement: wget, tar and unzip.
 
-1. Go to `/path/of/Amandroid`, or set `/path/of/Amandroid` in your PATH.
-2. [Optional] If you want to set the Java heap size (most of the time you do need).
+a. Go to `/path/of/Amandroid`, or set `/path/of/Amandroid` in your PATH.
+b. [Optional] If you want to set the Java heap size (most of the time you do need).
 ```bash
 export JAVA_OPTS=-Xms512m-Xmx8g
 ```
-3. Run:
+c. Run:
 ```bash
 amandroid your.class.name arg1 arg2 ...
 ```
