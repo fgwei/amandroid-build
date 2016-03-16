@@ -30,10 +30,21 @@ Hints: `/path/of/Amandroid` is the place you want to have Amandroid generated.
 
 # Run Amandroid
 
-Requirement: wget and unzip.
+## For MacOS and Linux user
+
+Requirement: wget, tar and unzip.
 
 1. Go to `/path/of/Amandroid`, or set `/path/of/Amandroid` in your PATH.
-2. Run:
+2. [Optional] If you want to set the Java heap size (most of the time you do need).
 ```bash
-amandroid your.class.name args ...
+export JAVA_OPTS=-Xms512m-Xmx8g
+```
+3. Run:
+```bash
+amandroid your.class.name arg1 arg2 ...
+```
+
+Examples commands, which will invoke object `org.sireum.amandroid.cli.TaintAnalysis`'s main method with four arguments:
+```bash
+amandroid org.sireum.amandroid.cli.TaintAnalysis DATA_LEAKAGE false /amandroid/sources/icc-bench /output/icc-bench
 ```
