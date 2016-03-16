@@ -49,3 +49,23 @@ Examples commands, which will invoke object `org.sireum.amandroid.cli.TaintAnaly
 ```bash
 amandroid org.sireum.amandroid.cli.TaintAnalysis DATA_LEAKAGE false /amandroid/sources/icc-bench /output/icc-bench
 ```
+
+## For Windows user
+
+Requirement: wget, unzip (Those two software can be downloaded from http://gnuwin32.sourceforge.net)
+
+a. Go to `X:\path\of\Amandroid`, or set `X:\path\of\Amandroid` in your PATH.
+
+b. [Optional] If you want to set the Java heap size (most of the time you do need).
+```bash
+SET JAVA_OPTS=-Xms512m-Xmx8g
+```
+c. Run:
+```bash
+amandroid.bat your.class.name arg1 arg2 ...
+```
+
+Examples commands, which will invoke object `org.sireum.amandroid.cli.TaintAnalysis`'s main method with four arguments:
+```bash
+amandroid.bat org.sireum.amandroid.cli.TaintAnalysis DATA_LEAKAGE false /amandroid/sources/icc-bench /output/icc-bench
+```
