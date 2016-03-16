@@ -17,7 +17,7 @@ tools/bin/sbt-init
 
 See http://www.scala-sbt.org/release/docs/index.html for more documentation on SBT.
 
-Hints: If you want to build Amandroid with your forked reporitory, you should modify `setup.sh` to have your reporitory's URL.
+> Hints: If you want to build Amandroid with your forked reporitory, you should modify `setup.sh` to have your reporitory's URL.
 
 ## Build Amandroid
 
@@ -26,7 +26,7 @@ Execute following command to build Amandroid:
 tools/bin/sbt clean compile package-bin "build-amandroid /path/of/Amandroid"
 ```
 
-Hints: `/path/of/Amandroid` is the place you want to have Amandroid generated.
+> Hints: `/path/of/Amandroid` is the place you want to have Amandroid generated, and the path should not have any space. For Windows user it's should be `X:\path\of\Amandroid` and path length don't go beyond 1024.
 
 ## Run Amandroid
 
