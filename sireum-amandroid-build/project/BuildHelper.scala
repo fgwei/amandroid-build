@@ -93,6 +93,17 @@ object BuildHelper {
       }
     }
 
+    // copy stash
+    val stashDir = amandroidDir / "stash"
+    if(stashDir.exists()) {
+      for(f <- stashDir.listFiles()) {
+        val fname = f.getName
+        if(f.isDirectory())
+          IO.copyDirectory(f, uds.baseDir / fname, true, true)
+        else IO.copyFile(f, uds.baseDir/ fname, true)
+      }
+    }
+    
     // copy scripts
     val launcherDir = amandroidDir / "scripts"
     val script = launcherDir / "amandroid"

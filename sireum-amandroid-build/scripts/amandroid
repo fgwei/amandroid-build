@@ -96,7 +96,6 @@ else
   echo "Please wait while Amandroid is loading..."
   echo
 fi
-echo $SCALA_OPTIONS
 scala -target:jvm-1.8 -nocompdaemon -savecompiled $SCALA_OPTIONS $0 $AMANDROID_HOME "$@"
 code=$?
 exit $code

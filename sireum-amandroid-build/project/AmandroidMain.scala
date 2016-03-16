@@ -14,14 +14,19 @@ import java.net.URLClassLoader
  * @author <a href="mailto:fwei@mail.usf.edu">Fengguo Wei</a>
  */
 object AmandroidMain extends App {
-  
+  if(args.size < 2) {
+    println("""
+Usage: amandroid your.main.class.name arg1 arg2 arg3 ...
+""")
+    System.exit(-1)
+  }
   final val AMANDROID_DIST_KEY = "AMANDROID_DIST"
   val amandroidDir = new File(args(0))
   var _addedClasspathURLs = Set[String]()
   updateClasspath(amandroidDir)
   
   val cliargs = args.slice(1, args.length)
-  val clazz = cliargs.head
+  val clazz = cliargs.head + "$"
   val myargs = cliargs.tail
   val c = Class.forName(clazz)
   val cons = c.getDeclaredConstructors()
