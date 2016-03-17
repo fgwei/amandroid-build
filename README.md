@@ -15,7 +15,7 @@ b. To resolve sireum-amandroid-build Eclipse project dependency, run:
 tools/bin/sbt-init
 ```
 
-See http://www.scala-sbt.org/release/docs/index.html for more documentation on SBT.
+See http://www.scala-sbt.org/release/docs/index.html for more documentation on SBT. And check [issue 1](https://github.com/fgwei/amandroid-build/issues/1) if you face sbt downloading issues.
 
 > Hints: If you want to build Amandroid with your forked reporitory, you should modify `setup.sh` to have your reporitory's URL.
 
