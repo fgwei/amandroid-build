@@ -8,7 +8,7 @@ import Using._
 import ErrorHandling.translate
 
 import java.io.{BufferedReader, ByteArrayOutputStream, BufferedWriter, File, FileInputStream, InputStream, OutputStream, PrintWriter}
-import java.net.{URI, URISyntaxException, URL}
+import java.net.{URI, URISyntaxException}
 import java.nio.charset.Charset
 import java.util.Properties
 import java.util.jar.{Attributes, JarEntry, JarFile, JarInputStream, JarOutputStream, Manifest}
