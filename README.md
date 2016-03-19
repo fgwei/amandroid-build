@@ -23,10 +23,10 @@ See http://www.scala-sbt.org/release/docs/index.html for more documentation on S
 
 Execute following command to build Amandroid:
 ```bash
-tools/bin/sbt clean compile package-bin "build-amandroid /path/of/Amandroid"
+tools/bin/sbt clean compile package-bin "build-amandroid [/path/of/Amandroid] [isDeletePlatform] "
 ```
 
-> Hints: `/path/of/Amandroid` is the place you want to have Amandroid generated, and the path should not have any space. For Windows user it's should be `X:\path\of\Amandroid` and path length don't go beyond 1024.
+> Hints: `/path/of/Amandroid` is the place you want to have Amandroid generated, and the path should not have any space. For Windows user it's should be `X:\path\of\Amandroid` and path length don't go beyond 1024. `isDeletePlatform` is a boolean value, which tells the build to keep platform folder or not. Platform folder contains java and scala library, which downloaded when you first time execute amandroid command. If you don't want to download such library repeatedly, just give a false.
 
 ## Run Amandroid
 
