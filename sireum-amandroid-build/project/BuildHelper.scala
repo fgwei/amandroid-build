@@ -29,7 +29,7 @@ object BuildHelper {
     envl
   }
 
-  def relativize(baseDir : File)(f : File) = {
+  def relativize(baseDir: File)(f: File) = {
     IO.relativize(baseDir, f) match {
       case Some(s) => s
       case _       => sys.error("Error: " + f.getAbsolutePath)
@@ -42,18 +42,19 @@ object BuildHelper {
     dateFormat.format(date)
   }
 
-  def buildAmandroid(amandroidDir : File, projectInfoMap : Map[String, ProjectInfo],
-                 dirs : scala.collection.Seq[String]) {
+  def buildAmandroid(amandroidDir: File, projectInfoMap: Map[String, ProjectInfo],
+                 dirs: scala.collection.Seq[String]) {
 
-    println("Sireum dir: " + amandroidDir.getAbsolutePath)
+    println("Amandroid dir: " + amandroidDir.getAbsolutePath)
 
     val uds =
       dirs.toList match {
         case List("-h") =>
-          println("Usage: [<amandroid-build-dir>]")
+          println("Usage: [<amandroid-build-dir>] [<delete-platform>]")
           return
-        case amandroidBuildDir :: Nil => AmandroidDirs(new File(amandroidBuildDir))
-        case Nil                     => AmandroidDirs(amandroidDir / "build")
+        case amandroidBuildDir :: deletePlatform :: Nil => AmandroidDirs(amandroidDir, new File(amandroidBuildDir), deletePlatform.toBoolean)
+        case amandroidBuildDir :: Nil => AmandroidDirs(amandroidDir, new File(amandroidBuildDir), true)
+        case Nil                     => AmandroidDirs(amandroidDir, amandroidDir / "build", true)
       }
 
     val checksums = newProperties
@@ -148,19 +149,19 @@ object BuildHelper {
     result.toString().trim()
   }
   
-  def writeBuildStamp(baseDir : File) {
+  def writeBuildStamp(baseDir: File) {
     val pw = new PrintWriter(new FileWriter(baseDir / AmandroidBuild.BUILD_FILENAME))
     pw.println(timeStamp)
     pw.close
   }
 
-  def newProperties : Map[String, String] = {
+  def newProperties: Map[String, String] = {
     import scala.collection.JavaConversions._
 
     new TreeMap[String, String]()
   }
 
-  def writeProperties(f : File, ms : Map[String, String]*) {
+  def writeProperties(f: File, ms: Map[String, String]*) {
     val pw = new PrintWriter(new FileWriter(f))
     for (m <- ms)
       for (e <- m) {
@@ -171,28 +172,41 @@ object BuildHelper {
     pw.close
   }
 
-  case class AmandroidDirs(baseDir : File) {
+  case class AmandroidDirs(amandroidDir: File, baseDir: File, deletePlatform: Boolean) {
     val libDir = baseDir / "lib"
     val srcDir = baseDir / "src"
     val licensesDir = baseDir / "licenses"
     val platformDir = baseDir / "platform"
-    IO.delete(baseDir)
-    baseDir.mkdirs()
-    IO.createDirectory(baseDir)
-    IO.createDirectory(libDir)
-    IO.createDirectory(srcDir)
-    IO.createDirectory(licensesDir)
-    IO.createDirectory(platformDir)
+    if(!deletePlatform) {
+      withTempDir(amandroidDir, "temp") { tempDir =>
+        IO.copyDirectory(platformDir, tempDir, true, true)
+        IO.delete(baseDir)
+        baseDir.mkdirs()
+        IO.createDirectory(baseDir)
+        IO.createDirectory(libDir)
+        IO.createDirectory(srcDir)
+        IO.createDirectory(licensesDir)
+        IO.copyDirectory(tempDir, platformDir, true, true)
+      }
+    } else {
+      IO.delete(baseDir)
+      baseDir.mkdirs()
+      IO.createDirectory(baseDir)
+      IO.createDirectory(libDir)
+      IO.createDirectory(srcDir)
+      IO.createDirectory(licensesDir)
+      IO.createDirectory(platformDir)
+    }
   }
 
-  def withTempDir[T](baseDir : File, tempName : String)(f : File => T) : T = {
+  def withTempDir[T](baseDir: File, tempName: String)(f: File => T): T = {
     val tempDir = baseDir / tempName
     val r = f(tempDir)
     IO.delete(tempDir)
     r
   }
 
-  def getAllFilesToZip(anchor : File, dir : File, acc : Map[String, File]) {
+  def getAllFilesToZip(anchor: File, dir: File, acc: Map[String, File]) {
     for (f <- dir.listFiles) {
       if (f.isDirectory)
         getAllFilesToZip(anchor, f, acc)
@@ -201,7 +215,7 @@ object BuildHelper {
     }
   }
 
-  def fudgeJar(f : File, tempDir : File) : Boolean = {
+  def fudgeJar(f: File, tempDir: File): Boolean = {
     if (!f.getName.startsWith("sireum-")) return true
     import scala.collection.JavaConversions._
 
@@ -225,7 +239,7 @@ object BuildHelper {
     }
   }
 
-  def getChecksum(file : File) = {
+  def getChecksum(file: File) = {
     val md = MessageDigest.getInstance("MD5")
 
     val is = new BufferedInputStream(new FileInputStream(file))
@@ -246,7 +260,7 @@ object BuildHelper {
     result.toString
   }
 
-  def readLine(file : File) = {
+  def readLine(file: File) = {
     val r = new BufferedReader(new FileReader(file))
     val result = r.readLine.trim
     r.close
