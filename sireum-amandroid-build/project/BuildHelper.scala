@@ -177,7 +177,7 @@ object BuildHelper {
     val srcDir = baseDir / "src"
     val licensesDir = baseDir / "licenses"
     val platformDir = baseDir / "platform"
-    if(!deletePlatform) {
+    if(platformDir.exists && !deletePlatform) {
       withTempDir(amandroidDir, "temp") { tempDir =>
         IO.copyDirectory(platformDir, tempDir, true, true)
         IO.delete(baseDir)
