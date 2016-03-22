@@ -34,7 +34,7 @@ if $download ; then
   function startdownload() {
     BASE_URL="http://cdn.azulsystems.com/zulu/bin/"
     FILENAME="zulu${java_version}-${java_build_num}-${os}.zip"
-    wget --no-verbose --referer=http://www.azulsystems.com/products/zulu/downloads -q -c --show-progress "${BASE_URL}${FILENAME}" -O "${AMANDROID_HOME}/platform/${FILENAME}" && {\
+    wget --no-verbose --referer=http://www.azulsystems.com/products/zulu/downloads -q -c "${BASE_URL}${FILENAME}" -O "${AMANDROID_HOME}/platform/${FILENAME}" && {\
       download=false
       unzip "${AMANDROID_HOME}/platform/${FILENAME}" -d "${AMANDROID_HOME}/platform" &> /dev/null
       rm -rf "${AMANDROID_HOME}/platform/${FILENAME}"
@@ -62,7 +62,7 @@ if $download ; then
   function startdownload() {
     BASE_URL="http://downloads.lightbend.com/scala/${scala_version}/"
     FILENAME="scala-${scala_version}.tgz"
-    wget -q -c --show-progress -O "${AMANDROID_HOME}/platform/${FILENAME}" --no-check-certificate --no-cookies "${BASE_URL}${FILENAME}"  && {\
+    wget -q -c -O "${AMANDROID_HOME}/platform/${FILENAME}" --no-check-certificate --no-cookies "${BASE_URL}${FILENAME}"  && {\
       download=false
       tar -zxf "${AMANDROID_HOME}/platform/${FILENAME}" -C "${AMANDROID_HOME}/platform" &> /dev/null
       rm -rf "${AMANDROID_HOME}/platform/${FILENAME}"
