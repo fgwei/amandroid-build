@@ -40,7 +40,12 @@ b. [Optional] If you want to set the Java heap size (most of the time you do nee
 ```bash
 export JAVA_OPTS=-Xms512m-Xmx8g
 ```
-c. Run:
+c. Setup java and scala:
+```bash
+setup
+```
+
+d. Run:
 ```bash
 amandroid your.class.name arg1 arg2 ...
 ```
@@ -60,7 +65,12 @@ b. [Optional] If you want to set the Java heap size (most of the time you do nee
 ```bash
 SET JAVA_OPTS=-Xms512m-Xmx8g
 ```
-c. Run:
+c. Setup java and scala:
+```bash
+setup.bat
+```
+
+d. Run:
 ```bash
 amandroid.bat your.class.name arg1 arg2 ...
 ```
