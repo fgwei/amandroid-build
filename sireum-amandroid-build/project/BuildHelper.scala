@@ -109,10 +109,14 @@ object BuildHelper {
     val launcherDir = amandroidDir / "scripts"
     val script = launcherDir / "amandroid"
     val winScript = launcherDir / "amandroid.bat"
+    val setup = launcherDir / "setup"
+    val winSetup = launcherDir / "setup.bat"
     val fScript = uds.baseDir / script.getName
     val fWinScript = uds.baseDir / winScript.getName
     val scriptStr = buildScript(script, amandroidDir)
     val winScriptStr = buildScript(winScript, amandroidDir)
+    val fSetup = uds.baseDir / setup.getName
+    val fWinSetup = uds.baseDir / winSetup.getName
     IO.write(fScript, scriptStr)
     fScript.setExecutable(true)
     fileMap(script) = fScript
@@ -121,7 +125,14 @@ object BuildHelper {
     fWinScript.setExecutable(true)
     fileMap(winScript) = fWinScript
     addChecksum(fWinScript)
-
+    IO.copyFile(setup, fSetup, true)
+    fSetup.setExecutable(true)
+    fileMap(setup) = fSetup
+    addChecksum(fSetup)
+    IO.copyFile(winSetup, fWinSetup, true)
+    fWinSetup.setExecutable(true)
+    fileMap(winSetup) = fWinSetup
+    addChecksum(fWinSetup)
     writeProperties(uds.baseDir / "checksums.properties", checksums)
     writeBuildStamp(uds.baseDir)
   }
