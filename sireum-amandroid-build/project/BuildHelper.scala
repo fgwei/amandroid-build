@@ -14,6 +14,7 @@ import java.io.BufferedInputStream
 import java.security.DigestInputStream
 import java.io.FileInputStream
 import java.io.LineNumberReader
+import java.nio.file._
 
 object BuildHelper {
 
@@ -190,14 +191,14 @@ object BuildHelper {
     val platformDir = baseDir / "platform"
     if(platformDir.exists && !deletePlatform) {
       withTempDir(amandroidDir, "temp") { tempDir =>
-        IO.copyDirectory(platformDir, tempDir, true, true)
+        copyDir(platformDir.toPath(), tempDir.toPath())
         IO.delete(baseDir)
         baseDir.mkdirs()
         IO.createDirectory(baseDir)
         IO.createDirectory(libDir)
         IO.createDirectory(srcDir)
         IO.createDirectory(licensesDir)
-        IO.copyDirectory(tempDir, platformDir, true, true)
+        copyDir(tempDir.toPath(), platformDir.toPath())
       }
     } else {
       IO.delete(baseDir)
@@ -207,6 +208,15 @@ object BuildHelper {
       IO.createDirectory(srcDir)
       IO.createDirectory(licensesDir)
       IO.createDirectory(platformDir)
+    }
+  }
+  
+  def copyDir(source: Path, dest: Path) {
+    Files.copy(source, dest, StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING)
+    if (source.toFile.isDirectory) {
+      val dir = source.toFile
+      dir.listFiles.foreach(file =>
+      copyDir(file.toPath, dest.resolve(file.getName)))
     }
   }
 
